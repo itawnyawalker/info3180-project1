@@ -5,8 +5,14 @@ Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file creates your application.
 """
 
-from app import app
-from flask import render_template, request, redirect, url_for
+import os
+from app import app, db
+from flask import render_template, request, redirect, send_from_directory, url_for, flash, session, abort
+from werkzeug.utils import secure_filename
+
+from app.forms import PropertyForm
+from app.models import Property
+
 
 
 ###
@@ -24,6 +30,50 @@ def about():
     """Render the website's about page."""
     return render_template('about.html', name="Mary Jane")
 
+@app.route('/properties/create')
+def create():
+    """Renders page which displays for to add new property """
+    form = PropertyForm()
+    if request.method == 'POST' and form.validate_on_submit:
+        title = form.title.data
+        num_bed = form.num_bed.data
+        num_bath = form.num_bath.data
+        location = form.location.data
+        price = form.price.data
+        ptype = form.type.data
+        desc = form.desc.data
+        photo = form.photo.data
+        filename = secure_filename(photo.filename)
+        photo.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+
+        p = Property(title, num_bed, num_bath, location, price, ptype, desc, photo)
+
+        db.session.add(p)
+        db.session.commit()
+
+        flash('Property Added', 'success')
+        return redirect(url_for('properties'))
+
+    return render_template('newproperty.html',form=form )
+
+@app.route('/properties')
+def properties():
+    """Renders list of all properties in the database"""
+    return render_template('properties.html')
+
+
+@app.route('/properties/<propertyid>')
+def get_property(propertyid):
+    """Viewing an individual property by the specific property id """
+    root_dir = os.getcwd()
+    img = send_from_directory(os.path.join(root_dir, app.config['UPLOAD_FOLDER'] ))
+
+    property = Property.query.filterby(propertyid=id).first()
+
+    if property is not None: 
+        render_template('property.html', )
+
+ge
 
 ###
 # The functions below should be applicable to all Flask apps.

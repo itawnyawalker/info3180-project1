@@ -1,3 +1,14 @@
 body {
     padding-top: 5rem;
 }
+
+.grid-container{
+    display: grid;
+    grid-template-columns: auto auto auto;
+    padding: 10px;
+    gap: 20px 20px;
+}
+
+.card {
+    width: 400px;
+}
