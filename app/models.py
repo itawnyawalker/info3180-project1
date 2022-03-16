@@ -2,7 +2,7 @@ from . import db
 
 class Property(db.Model):
     """Database"""
-    __tablename__= 'property_info'
+    __tablename__ = 'property_info'
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80))
@@ -14,17 +14,16 @@ class Property(db.Model):
     description = db.Column(db.String)
     photo = db.Column(db.String)
 
-    def __init__(self, title, num_bedrooms, num_bathrooms,location, price, ptype, description, photo):
+    def __init__(self, title, num_bedrooms, num_bathrooms, location, price, ptype, description, photo):
         self.title = title
         self.num_bedrooms = num_bedrooms
         self.num_bathrooms = num_bathrooms
         self.location = location
         self.price = price
-        self.ptype = ptype 
+        self.ptype = ptype
         self.description = description
         self.photo = photo
 
-    
     def is_authenticated(self):
         return True
 

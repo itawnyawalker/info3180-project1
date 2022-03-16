@@ -1,18 +1,22 @@
 {% extends "base.html" %}
 
 {% block main %}
+<h2> Properties </h2>
 <div class="grid-container">
-    {% for file in filenames %}
+    {% for p in properties %}
     <div class="card">
-        <img class=""card-img-top src="{{ url_for('get_property', filename=file) }} " alt="{{ file }} ">
-        <div class="card-body">
-            <h4 class="card-title">{{ title }} </h4>
-            <p class="card-text loc">{{ location }}</p>
-            <p class="card-text price">{{ price }}</p>
-            <a href="{{ url_for('property', filename=file) }} " class="btn btn-primary">See Profile</a>
+        <img class="card-img-top" src="{{p.photo }}" alt="{{ p.photo }} ">
+        <div class="card-body d-flex flex-column">
+            <h4 class="card-title">{{ p.title }} </h4>
+            <p class="card-text loc bi bi-geo-alt">{{ p.location }}</p>
+            <p class="card-text price">{{ p.price }}</p>
+            
         </div>
+        <a href="{{ url_for('get_property', propertyid=p.id) }}" class="btn btn-primary view">See Profile</a>
     </div>
     {% endfor %}
 </div>
+
+
 
 {% endblock %}

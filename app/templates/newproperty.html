@@ -3,7 +3,10 @@
 {% block main %}
 <div class="login-form center-block">
     <h2>Add New Property </h2>
-    <form action="{{ url_for('create') }}" method="post">
+    {%- for message in get_flashed_messages() %}
+         {{ message }}
+    {%- endfor %}
+    <form method="post" action="{{ url_for('add_property') }}" >
         {{ form.csrf_token }}
         <div class="form-group">
             {{ form.title.label }}
@@ -33,7 +36,7 @@
         </div>
         <div class="form-group">
             {{ form.photo.label }}
-            {{ form.photo(class='form-control') }}
+            {{ form.photo(class='upload') }}
         </div>
         <button type="submit" name="submit" class="btn btn-primary btn-block"> Submit </button>
     </form>
