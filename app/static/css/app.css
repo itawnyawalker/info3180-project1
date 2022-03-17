@@ -89,4 +89,12 @@ span {
     margin-right: 25px;
 }
 
+.card-img-left{
+    width: 45%;
+    height: 350px;
+}
 
+.single-body{
+    width: 70%;
+    
+}

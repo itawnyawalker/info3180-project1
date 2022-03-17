@@ -68,13 +68,10 @@ def properties():
 @app.route('/properties/<propertyid>')
 def get_property(propertyid):
     """Viewing an individual property by the specific property id """
-    root_dir = os.getcwd()
-
     property = Property.query.filter_by(id=propertyid).first()
-    img = os.path.join(root_dir,"uploads", property.photo)
     
     if property is not None: 
-        return render_template('property.html', img=img, p=property, loc=locale)
+        return render_template('property.html',  p=property, loc=locale)
 
 
 ###
