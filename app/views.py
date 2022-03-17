@@ -5,15 +5,16 @@ Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file creates your application.
 """
 
-import os
+import os, locale
 from app import app
-from flask import render_template, request, redirect, send_from_directory, url_for, flash, session, abort
+from flask import render_template, request, redirect, send_from_directory, url_for, flash, safe_join
 from werkzeug.utils import secure_filename
 
 from app.forms import PropertyForm
 from app.models import Property
 from . import db
 
+locale.setlocale(locale.LC_ALL,'en_CA.UTF-8')
 
 
 ###
@@ -35,34 +36,33 @@ def about():
 def add_property():
     """Renders page which displays for to add new property """
     form = PropertyForm()
-    if request.method == 'POST' and form.validate_on_submit():
-        title = form.title.data
-        num_bed = form.num_bed.data
-        num_bath = form.num_bath.data
-        location = form.location.data
-        price = form.price.data
-        ptype = form.type.data
-        desc = form.desc.data
-        photo = form.photo.data
-        filename = secure_filename(photo.filename)
-        photo.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            title = form.title.data
+            num_bed = form.num_bed.data
+            num_bath = form.num_bath.data
+            location = form.location.data
+            price = form.price.data
+            ptype = form.type.data
+            desc = form.desc.data
+            photo = form.photo.data
+            filename = secure_filename(photo.filename)
+            photo.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
 
-        new = Property(title=title, num_bedrooms=num_bed, num_bathrooms=num_bath, location=location, price=price, ptype=ptype, description=desc, photo=filename)
+            new = Property(title=title, num_bedrooms=num_bed, num_bathrooms=num_bath, location=location, price=price, ptype=ptype, description=desc, photo=filename)
 
-        db.session.add(new)
-        db.session.commit()
+            db.session.add(new)
+            db.session.commit()
 
-        flash('Property Added', 'success')
-        return redirect(url_for('home'))
-
+            flash('Property Added', 'success')
+            return redirect(url_for('properties'))
     return render_template('newproperty.html', form=form )
 
 
 @app.route('/properties')
 def properties():
     """Renders list of all properties in the database"""
-
-    return render_template('properties.html', properties= Property.query.all())
+    return render_template('properties.html', properties=Property.query.all(),loc=locale)
 
 
 @app.route('/properties/<propertyid>')
@@ -71,10 +71,10 @@ def get_property(propertyid):
     root_dir = os.getcwd()
 
     property = Property.query.filter_by(id=propertyid).first()
-    img = send_from_directory(os.path.join(root_dir, app.config['UPLOAD_FOLDER']), property.photo )
-
+    img = os.path.join(root_dir,"uploads", property.photo)
+    
     if property is not None: 
-        return render_template('property.html', img=img, p=property)
+        return render_template('property.html', img=img, p=property, loc=locale)
 
 
 ###

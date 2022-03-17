@@ -2,15 +2,17 @@
 
 {% block main %}
 <h2> Properties </h2>
+{%- for message in get_flashed_messages() %}
+    {{ message }}
+{%- endfor %}
 <div class="grid-container">
     {% for p in properties %}
-    <div class="card">
-        <img class="card-img-top" src="{{p.photo }}" alt="{{ p.photo }} ">
+    <div class="card properties">
+        <img class="card-img-top" src="{{ img }}" alt="{{ p.photo }} ">
         <div class="card-body d-flex flex-column">
             <h4 class="card-title">{{ p.title }} </h4>
             <p class="card-text loc bi bi-geo-alt">{{ p.location }}</p>
-            <p class="card-text price">{{ p.price }}</p>
-            
+            <p class="card-text price">{{ loc.currency(p.price, grouping=True) }}</p>
         </div>
         <a href="{{ url_for('get_property', propertyid=p.id) }}" class="btn btn-primary view">See Profile</a>
     </div>
