@@ -30,7 +30,7 @@ def home():
 @app.route('/about/')
 def about():
     """Render the website's about page."""
-    return render_template('about.html', name="Mary Jane")
+    return render_template('about.html', name="Itawnya Walker")
 
 @app.route('/properties/create', methods=['POST', 'GET'])
 def add_property():
@@ -47,7 +47,8 @@ def add_property():
             desc = form.desc.data
             photo = form.photo.data
             filename = secure_filename(photo.filename)
-            photo.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+            print(filename)
+            photo.save(os.path.join(app.root_path, app.config['UPLOAD_FOLDER'], filename))
 
             new = Property(title=title, num_bedrooms=num_bed, num_bathrooms=num_bath, location=location, price=price, ptype=ptype, description=desc, photo=filename)
 
