@@ -60,10 +60,11 @@ def add_property():
     return render_template('newproperty.html', form=form )
 
 
-@app.route('/properties')
+@app.route('/properties', methods=['POST', 'GET'])
 def properties():
     """Renders list of all properties in the database"""
-    return render_template('properties.html', properties=Property.query.all(),loc=locale)
+    if request.method == 'GET':
+        return render_template('properties.html', properties=Property.query.all(),loc=locale)
 
 
 @app.route('/properties/<propertyid>')
